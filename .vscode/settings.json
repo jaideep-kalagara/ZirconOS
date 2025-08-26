@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "*.css": "tailwindcss",
+        "stdio.h": "c",
+        "io.h": "c",
+        "stdbool.h": "c",
+        "stdint.h": "c",
+        "string.h": "c",
+        "vga.h": "c",
+        "tty.h": "c",
+        "stddef.h": "c"
+    },
+}
