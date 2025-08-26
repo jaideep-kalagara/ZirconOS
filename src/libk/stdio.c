@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include <stdio.h>
+
 /* ----- Public API ----- */
 
 void putc(const char c) { _putc(c); }

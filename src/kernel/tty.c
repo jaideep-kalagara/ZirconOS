@@ -1,5 +1,4 @@
-#include "arch/i686/io.h"
-
+#include <arch/i686/io.h>
 #include <kernel/tty.h>
 #include <kernel/vga.h>
 #include <stdbool.h>

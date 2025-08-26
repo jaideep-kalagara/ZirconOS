@@ -8,6 +8,7 @@
         "string.h": "c",
         "vga.h": "c",
         "tty.h": "c",
-        "stddef.h": "c"
+        "stddef.h": "c",
+        "gdt.h": "c"
     },
 }

@@ -14,4 +14,12 @@ static inline uint8_t i686_inb(uint16_t port) {
   return ret;
 }
 
+static inline void i686_interrupts_disable(void) {
+  __asm__ volatile("cli" ::: "memory");
+}
+
+static inline void i686_interrupts_enable(void) {
+  __asm__ volatile("sti" ::: "memory");
+}
+
 #endif // _I686_IO_H
