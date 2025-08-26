@@ -120,4 +120,5 @@ tree:
 	@command -v tree >/dev/null && tree -a -I '.git|build' . || true
 
 clean:
-	rm -rf build
+	@rm -rf build
+	@echo "----> clean done"
