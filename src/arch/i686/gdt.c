@@ -50,7 +50,6 @@ struct __attribute__((packed)) gdtr {
 };
 static struct gdtr gdtr;
 
-// Encode your descriptor the same way you already did, but RETURN it
 static inline uint64_t make_descriptor(uint32_t base, uint32_t limit,
                                        uint16_t flag) {
   uint64_t desc = 0;
@@ -83,7 +82,7 @@ void i686_init_gdt(void) {
   // 2: kernel data (same span)
   gdt[2] = make_descriptor(0x00000000, 0x000FFFFF, GDT_DATA_PL0);
 
-  // GDTR -> our table
+  // GDTR -> table
   gdtr.limit = sizeof(gdt) - 1;
   gdtr.base = (uint32_t)gdt;
 

@@ -1,6 +1,6 @@
-#ifndef _I686_GDT_H
-#define _I686_GDT_H
+#pragma once
+
+#define i686_GDT_CODE_SEGMENT 0x08
+#define i686_GDT_DATA_SEGMENT 0x10
 
 void i686_init_gdt(void);
-
-#endif

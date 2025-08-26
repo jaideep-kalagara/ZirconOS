@@ -1,6 +1,4 @@
-#ifndef _KERNEL_VGA_H
-#define _KERNEL_VGA_H
-
+#pragma once
 #include <stdint.h>
 
 enum vga_color {
@@ -30,5 +28,3 @@ static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
 static inline uint16_t vga_entry(unsigned char ch, uint8_t color) {
   return (uint16_t)ch | ((uint16_t)color << 8);
 }
-
-#endif

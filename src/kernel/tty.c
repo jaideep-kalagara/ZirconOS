@@ -35,6 +35,7 @@ void disable_cursor(void) {
 /* Draw/read single cell */
 
 void putchr(size_t x, size_t y, char c) {
+  i686_outb(0xe9, c);
   screen_buffer[y * SCREEN_WIDTH + x] =
       vga_entry((unsigned char)c, terminal_color);
 }
@@ -95,16 +96,20 @@ void terminal_clear_screen(void) {
 void _putc(const char c) {
   switch (c) {
   case '\n':
+    i686_outb(0xe9, '\n');
     screen_x = 0;
     screen_y++;
     break;
   case '\r':
+    i686_outb(0xe9, '\r');
     screen_x = 0;
     break;
   case '\t': {
+    i686_outb(0xe9, '\t');
     int spaces = 4 - (int)(screen_x % 4);
-    while (spaces-- > 0)
+    while (spaces-- > 0) {
       _putc(' ');
+    }
     break;
   }
   default:

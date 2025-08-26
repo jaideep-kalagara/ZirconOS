@@ -110,7 +110,7 @@ iso: $(BUILD)/kernel.elf boot/grub/grub.cfg
 
 # ----- Utilities -----
 run: all
-	@qemu-system-i386 -cdrom $(BUILD)/os.iso
+	@qemu-system-i386 -cdrom $(BUILD)/os.iso -debugcon stdio
 	@echo "----> running $(BUILD)/os.iso done"
 
 disasm: $(BUILD)/kernel.elf

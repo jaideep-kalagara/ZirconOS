@@ -1,5 +1,4 @@
-#ifndef _LIBK_STDIO_H
-#define _LIBK_STDIO_H
+#pragma once
 
 #include <stddef.h>
 #include <stdint.h>
@@ -8,5 +7,3 @@
 void putc(const char c);
 void puts(const char *s);
 void printf(const char *fmt, ...);
-
-#endif

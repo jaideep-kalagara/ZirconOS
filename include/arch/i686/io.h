@@ -1,5 +1,4 @@
-#ifndef _I686_IO_H
-#define _I686_IO_H
+#pragma once
 
 #include <stdint.h>
 
@@ -22,4 +21,11 @@ static inline void i686_interrupts_enable(void) {
   __asm__ volatile("sti" ::: "memory");
 }
 
-#endif // _I686_IO_H
+static inline void i686_panic(void) {
+  i686_interrupts_disable();
+  for (;;) {
+    __asm__ volatile("hlt");
+  }
+}
+
+static inline void i686_iowait(void) { i686_outb(0x80, 0); }

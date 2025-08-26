@@ -1,0 +1,775 @@
+#include <arch/i686/gdt.h>
+#include <arch/i686/idt.h>
+#include <arch/i686/isr.h>
+
+extern void i686_ISR0();
+extern void i686_ISR1();
+extern void i686_ISR2();
+extern void i686_ISR3();
+extern void i686_ISR4();
+extern void i686_ISR5();
+extern void i686_ISR6();
+extern void i686_ISR7();
+extern void i686_ISR8();
+extern void i686_ISR9();
+extern void i686_ISR10();
+extern void i686_ISR11();
+extern void i686_ISR12();
+extern void i686_ISR13();
+extern void i686_ISR14();
+extern void i686_ISR15();
+extern void i686_ISR16();
+extern void i686_ISR17();
+extern void i686_ISR18();
+extern void i686_ISR19();
+extern void i686_ISR20();
+extern void i686_ISR21();
+extern void i686_ISR22();
+extern void i686_ISR23();
+extern void i686_ISR24();
+extern void i686_ISR25();
+extern void i686_ISR26();
+extern void i686_ISR27();
+extern void i686_ISR28();
+extern void i686_ISR29();
+extern void i686_ISR30();
+extern void i686_ISR31();
+extern void i686_ISR32();
+extern void i686_ISR33();
+extern void i686_ISR34();
+extern void i686_ISR35();
+extern void i686_ISR36();
+extern void i686_ISR37();
+extern void i686_ISR38();
+extern void i686_ISR39();
+extern void i686_ISR40();
+extern void i686_ISR41();
+extern void i686_ISR42();
+extern void i686_ISR43();
+extern void i686_ISR44();
+extern void i686_ISR45();
+extern void i686_ISR46();
+extern void i686_ISR47();
+extern void i686_ISR48();
+extern void i686_ISR49();
+extern void i686_ISR50();
+extern void i686_ISR51();
+extern void i686_ISR52();
+extern void i686_ISR53();
+extern void i686_ISR54();
+extern void i686_ISR55();
+extern void i686_ISR56();
+extern void i686_ISR57();
+extern void i686_ISR58();
+extern void i686_ISR59();
+extern void i686_ISR60();
+extern void i686_ISR61();
+extern void i686_ISR62();
+extern void i686_ISR63();
+extern void i686_ISR64();
+extern void i686_ISR65();
+extern void i686_ISR66();
+extern void i686_ISR67();
+extern void i686_ISR68();
+extern void i686_ISR69();
+extern void i686_ISR70();
+extern void i686_ISR71();
+extern void i686_ISR72();
+extern void i686_ISR73();
+extern void i686_ISR74();
+extern void i686_ISR75();
+extern void i686_ISR76();
+extern void i686_ISR77();
+extern void i686_ISR78();
+extern void i686_ISR79();
+extern void i686_ISR80();
+extern void i686_ISR81();
+extern void i686_ISR82();
+extern void i686_ISR83();
+extern void i686_ISR84();
+extern void i686_ISR85();
+extern void i686_ISR86();
+extern void i686_ISR87();
+extern void i686_ISR88();
+extern void i686_ISR89();
+extern void i686_ISR90();
+extern void i686_ISR91();
+extern void i686_ISR92();
+extern void i686_ISR93();
+extern void i686_ISR94();
+extern void i686_ISR95();
+extern void i686_ISR96();
+extern void i686_ISR97();
+extern void i686_ISR98();
+extern void i686_ISR99();
+extern void i686_ISR100();
+extern void i686_ISR101();
+extern void i686_ISR102();
+extern void i686_ISR103();
+extern void i686_ISR104();
+extern void i686_ISR105();
+extern void i686_ISR106();
+extern void i686_ISR107();
+extern void i686_ISR108();
+extern void i686_ISR109();
+extern void i686_ISR110();
+extern void i686_ISR111();
+extern void i686_ISR112();
+extern void i686_ISR113();
+extern void i686_ISR114();
+extern void i686_ISR115();
+extern void i686_ISR116();
+extern void i686_ISR117();
+extern void i686_ISR118();
+extern void i686_ISR119();
+extern void i686_ISR120();
+extern void i686_ISR121();
+extern void i686_ISR122();
+extern void i686_ISR123();
+extern void i686_ISR124();
+extern void i686_ISR125();
+extern void i686_ISR126();
+extern void i686_ISR127();
+extern void i686_ISR128();
+extern void i686_ISR129();
+extern void i686_ISR130();
+extern void i686_ISR131();
+extern void i686_ISR132();
+extern void i686_ISR133();
+extern void i686_ISR134();
+extern void i686_ISR135();
+extern void i686_ISR136();
+extern void i686_ISR137();
+extern void i686_ISR138();
+extern void i686_ISR139();
+extern void i686_ISR140();
+extern void i686_ISR141();
+extern void i686_ISR142();
+extern void i686_ISR143();
+extern void i686_ISR144();
+extern void i686_ISR145();
+extern void i686_ISR146();
+extern void i686_ISR147();
+extern void i686_ISR148();
+extern void i686_ISR149();
+extern void i686_ISR150();
+extern void i686_ISR151();
+extern void i686_ISR152();
+extern void i686_ISR153();
+extern void i686_ISR154();
+extern void i686_ISR155();
+extern void i686_ISR156();
+extern void i686_ISR157();
+extern void i686_ISR158();
+extern void i686_ISR159();
+extern void i686_ISR160();
+extern void i686_ISR161();
+extern void i686_ISR162();
+extern void i686_ISR163();
+extern void i686_ISR164();
+extern void i686_ISR165();
+extern void i686_ISR166();
+extern void i686_ISR167();
+extern void i686_ISR168();
+extern void i686_ISR169();
+extern void i686_ISR170();
+extern void i686_ISR171();
+extern void i686_ISR172();
+extern void i686_ISR173();
+extern void i686_ISR174();
+extern void i686_ISR175();
+extern void i686_ISR176();
+extern void i686_ISR177();
+extern void i686_ISR178();
+extern void i686_ISR179();
+extern void i686_ISR180();
+extern void i686_ISR181();
+extern void i686_ISR182();
+extern void i686_ISR183();
+extern void i686_ISR184();
+extern void i686_ISR185();
+extern void i686_ISR186();
+extern void i686_ISR187();
+extern void i686_ISR188();
+extern void i686_ISR189();
+extern void i686_ISR190();
+extern void i686_ISR191();
+extern void i686_ISR192();
+extern void i686_ISR193();
+extern void i686_ISR194();
+extern void i686_ISR195();
+extern void i686_ISR196();
+extern void i686_ISR197();
+extern void i686_ISR198();
+extern void i686_ISR199();
+extern void i686_ISR200();
+extern void i686_ISR201();
+extern void i686_ISR202();
+extern void i686_ISR203();
+extern void i686_ISR204();
+extern void i686_ISR205();
+extern void i686_ISR206();
+extern void i686_ISR207();
+extern void i686_ISR208();
+extern void i686_ISR209();
+extern void i686_ISR210();
+extern void i686_ISR211();
+extern void i686_ISR212();
+extern void i686_ISR213();
+extern void i686_ISR214();
+extern void i686_ISR215();
+extern void i686_ISR216();
+extern void i686_ISR217();
+extern void i686_ISR218();
+extern void i686_ISR219();
+extern void i686_ISR220();
+extern void i686_ISR221();
+extern void i686_ISR222();
+extern void i686_ISR223();
+extern void i686_ISR224();
+extern void i686_ISR225();
+extern void i686_ISR226();
+extern void i686_ISR227();
+extern void i686_ISR228();
+extern void i686_ISR229();
+extern void i686_ISR230();
+extern void i686_ISR231();
+extern void i686_ISR232();
+extern void i686_ISR233();
+extern void i686_ISR234();
+extern void i686_ISR235();
+extern void i686_ISR236();
+extern void i686_ISR237();
+extern void i686_ISR238();
+extern void i686_ISR239();
+extern void i686_ISR240();
+extern void i686_ISR241();
+extern void i686_ISR242();
+extern void i686_ISR243();
+extern void i686_ISR244();
+extern void i686_ISR245();
+extern void i686_ISR246();
+extern void i686_ISR247();
+extern void i686_ISR248();
+extern void i686_ISR249();
+extern void i686_ISR250();
+extern void i686_ISR251();
+extern void i686_ISR252();
+extern void i686_ISR253();
+extern void i686_ISR254();
+extern void i686_ISR255();
+
+void i686_isr_initialize_gates() {
+  i686_idt_set_gate(0, i686_ISR0, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(1, i686_ISR1, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(2, i686_ISR2, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(3, i686_ISR3, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(4, i686_ISR4, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(5, i686_ISR5, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(6, i686_ISR6, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(7, i686_ISR7, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(8, i686_ISR8, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(9, i686_ISR9, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(10, i686_ISR10, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(11, i686_ISR11, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(12, i686_ISR12, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(13, i686_ISR13, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(14, i686_ISR14, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(15, i686_ISR15, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(16, i686_ISR16, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(17, i686_ISR17, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(18, i686_ISR18, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(19, i686_ISR19, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(20, i686_ISR20, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(21, i686_ISR21, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(22, i686_ISR22, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(23, i686_ISR23, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(24, i686_ISR24, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(25, i686_ISR25, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(26, i686_ISR26, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(27, i686_ISR27, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(28, i686_ISR28, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(29, i686_ISR29, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(30, i686_ISR30, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(31, i686_ISR31, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(32, i686_ISR32, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(33, i686_ISR33, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(34, i686_ISR34, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(35, i686_ISR35, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(36, i686_ISR36, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(37, i686_ISR37, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(38, i686_ISR38, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(39, i686_ISR39, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(40, i686_ISR40, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(41, i686_ISR41, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(42, i686_ISR42, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(43, i686_ISR43, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(44, i686_ISR44, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(45, i686_ISR45, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(46, i686_ISR46, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(47, i686_ISR47, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(48, i686_ISR48, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(49, i686_ISR49, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(50, i686_ISR50, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(51, i686_ISR51, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(52, i686_ISR52, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(53, i686_ISR53, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(54, i686_ISR54, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(55, i686_ISR55, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(56, i686_ISR56, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(57, i686_ISR57, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(58, i686_ISR58, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(59, i686_ISR59, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(60, i686_ISR60, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(61, i686_ISR61, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(62, i686_ISR62, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(63, i686_ISR63, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(64, i686_ISR64, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(65, i686_ISR65, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(66, i686_ISR66, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(67, i686_ISR67, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(68, i686_ISR68, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(69, i686_ISR69, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(70, i686_ISR70, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(71, i686_ISR71, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(72, i686_ISR72, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(73, i686_ISR73, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(74, i686_ISR74, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(75, i686_ISR75, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(76, i686_ISR76, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(77, i686_ISR77, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(78, i686_ISR78, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(79, i686_ISR79, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(80, i686_ISR80, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(81, i686_ISR81, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(82, i686_ISR82, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(83, i686_ISR83, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(84, i686_ISR84, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(85, i686_ISR85, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(86, i686_ISR86, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(87, i686_ISR87, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(88, i686_ISR88, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(89, i686_ISR89, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(90, i686_ISR90, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(91, i686_ISR91, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(92, i686_ISR92, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(93, i686_ISR93, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(94, i686_ISR94, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(95, i686_ISR95, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(96, i686_ISR96, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(97, i686_ISR97, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(98, i686_ISR98, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(99, i686_ISR99, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(100, i686_ISR100, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(101, i686_ISR101, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(102, i686_ISR102, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(103, i686_ISR103, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(104, i686_ISR104, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(105, i686_ISR105, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(106, i686_ISR106, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(107, i686_ISR107, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(108, i686_ISR108, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(109, i686_ISR109, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(110, i686_ISR110, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(111, i686_ISR111, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(112, i686_ISR112, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(113, i686_ISR113, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(114, i686_ISR114, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(115, i686_ISR115, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(116, i686_ISR116, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(117, i686_ISR117, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(118, i686_ISR118, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(119, i686_ISR119, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(120, i686_ISR120, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(121, i686_ISR121, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(122, i686_ISR122, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(123, i686_ISR123, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(124, i686_ISR124, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(125, i686_ISR125, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(126, i686_ISR126, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(127, i686_ISR127, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(128, i686_ISR128, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(129, i686_ISR129, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(130, i686_ISR130, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(131, i686_ISR131, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(132, i686_ISR132, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(133, i686_ISR133, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(134, i686_ISR134, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(135, i686_ISR135, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(136, i686_ISR136, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(137, i686_ISR137, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(138, i686_ISR138, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(139, i686_ISR139, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(140, i686_ISR140, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(141, i686_ISR141, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(142, i686_ISR142, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(143, i686_ISR143, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(144, i686_ISR144, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(145, i686_ISR145, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(146, i686_ISR146, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(147, i686_ISR147, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(148, i686_ISR148, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(149, i686_ISR149, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(150, i686_ISR150, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(151, i686_ISR151, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(152, i686_ISR152, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(153, i686_ISR153, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(154, i686_ISR154, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(155, i686_ISR155, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(156, i686_ISR156, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(157, i686_ISR157, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(158, i686_ISR158, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(159, i686_ISR159, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(160, i686_ISR160, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(161, i686_ISR161, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(162, i686_ISR162, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(163, i686_ISR163, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(164, i686_ISR164, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(165, i686_ISR165, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(166, i686_ISR166, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(167, i686_ISR167, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(168, i686_ISR168, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(169, i686_ISR169, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(170, i686_ISR170, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(171, i686_ISR171, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(172, i686_ISR172, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(173, i686_ISR173, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(174, i686_ISR174, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(175, i686_ISR175, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(176, i686_ISR176, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(177, i686_ISR177, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(178, i686_ISR178, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(179, i686_ISR179, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(180, i686_ISR180, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(181, i686_ISR181, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(182, i686_ISR182, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(183, i686_ISR183, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(184, i686_ISR184, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(185, i686_ISR185, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(186, i686_ISR186, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(187, i686_ISR187, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(188, i686_ISR188, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(189, i686_ISR189, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(190, i686_ISR190, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(191, i686_ISR191, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(192, i686_ISR192, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(193, i686_ISR193, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(194, i686_ISR194, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(195, i686_ISR195, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(196, i686_ISR196, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(197, i686_ISR197, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(198, i686_ISR198, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(199, i686_ISR199, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(200, i686_ISR200, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(201, i686_ISR201, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(202, i686_ISR202, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(203, i686_ISR203, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(204, i686_ISR204, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(205, i686_ISR205, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(206, i686_ISR206, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(207, i686_ISR207, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(208, i686_ISR208, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(209, i686_ISR209, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(210, i686_ISR210, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(211, i686_ISR211, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(212, i686_ISR212, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(213, i686_ISR213, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(214, i686_ISR214, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(215, i686_ISR215, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(216, i686_ISR216, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(217, i686_ISR217, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(218, i686_ISR218, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(219, i686_ISR219, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(220, i686_ISR220, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(221, i686_ISR221, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(222, i686_ISR222, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(223, i686_ISR223, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(224, i686_ISR224, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(225, i686_ISR225, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(226, i686_ISR226, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(227, i686_ISR227, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(228, i686_ISR228, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(229, i686_ISR229, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(230, i686_ISR230, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(231, i686_ISR231, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(232, i686_ISR232, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(233, i686_ISR233, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(234, i686_ISR234, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(235, i686_ISR235, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(236, i686_ISR236, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(237, i686_ISR237, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(238, i686_ISR238, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(239, i686_ISR239, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(240, i686_ISR240, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(241, i686_ISR241, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(242, i686_ISR242, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(243, i686_ISR243, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(244, i686_ISR244, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(245, i686_ISR245, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(246, i686_ISR246, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(247, i686_ISR247, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(248, i686_ISR248, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(249, i686_ISR249, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(250, i686_ISR250, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(251, i686_ISR251, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(252, i686_ISR252, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(253, i686_ISR253, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(254, i686_ISR254, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+  i686_idt_set_gate(255, i686_ISR255, i686_GDT_CODE_SEGMENT,
+                    IDT_FLAG_RING0 | IDT_FLAG_GATE_32BIT_INT);
+}

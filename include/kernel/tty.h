@@ -1,5 +1,4 @@
-#ifndef _KERNEL_TTY_H
-#define _KERNEL_TTY_H
+#pragma once
 
 #include <kernel/vga.h>
 #include <stddef.h>
@@ -39,5 +38,3 @@ void terminal_clear_screen(void);
 void _putc(const char c);
 /* Print string */
 void _puts(const char *s);
-
-#endif // _KERNEL_TTY_H
