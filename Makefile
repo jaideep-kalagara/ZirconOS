@@ -1,7 +1,3 @@
-# =========================
-#  Tiny i686 Kernel Makefile (libk.a fixed)
-# =========================
-
 # --- Toolchain ---
 CROSS_PREFIX ?=
 CC       := $(CROSS_PREFIX)gcc
@@ -65,13 +61,15 @@ all: $(BUILD)/kernel.elf iso
 # Link the kernel against libk.a
 $(BUILD)/kernel.elf: $(OBJ) $(LIBK_A) $(LDSCRIPT)
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -o $@ $(OBJ) $(LIBK_A) $(LDFLAGS) $(LIBGCC)
+	@$(CC) $(CFLAGS) -o $@ $(OBJ) $(LIBK_A) $(LDFLAGS) $(LIBGCC)
+	@echo "----> $@ done"
 
 # ----- Build libk.a -----
 $(LIBK_A): $(OBJ_LIBK)
 	@mkdir -p $(LIBDIR)
-	$(AR) rcs $@ $(OBJ_LIBK) $(LIBGCC)
-	$(RANLIB) $@
+	@$(AR) rcs $@ $(OBJ_LIBK) $(LIBGCC)
+	@$(RANLIB) $@
+	@echo "----> $@ done"
 	@members="$$($(AR) t $@)"; \
 	if [ -z "$$members" ]; then \
 	  echo "WARNING: $(LIBK_A) is empty (no members)"; \
@@ -82,32 +80,38 @@ $(LIBK_A): $(OBJ_LIBK)
 # C -> o (both libk and src share this rule)
 $(OBJDIR)/%.o: %.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@echo "----> $@ done"
 
 # GAS (.S/.s) -> o
 $(OBJDIR)/%.o: %.S
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@echo "----> $@ done"
 
 $(OBJDIR)/%.o: %.s
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@echo "----> $@ done"
 
 # NASM (.asm) -> o
 $(OBJDIR)/%.o: %.asm
 	@mkdir -p $(dir $@)
-	$(NASM) $(NASMFLAGS) $< -o $@
+	@$(NASM) $(NASMFLAGS) $< -o $@
+	@echo "----> $@ done"
 
 # ----- ISO -----
 iso: $(BUILD)/kernel.elf boot/grub/grub.cfg
 	@mkdir -p $(GRUBDIR)
-	cp -v boot/grub/grub.cfg $(GRUBDIR)/
-	cp -v $(BUILD)/kernel.elf $(BOOTDIR)/
-	grub-mkrescue -o $(BUILD)/os.iso $(ISOROOT)
+	@cp -v boot/grub/grub.cfg $(GRUBDIR)/
+	@cp -v $(BUILD)/kernel.elf $(BOOTDIR)/
+	@grub-mkrescue -o $(BUILD)/os.iso $(ISOROOT) > /dev/null 2>&1
+	@echo "----> $(BUILD)/os.iso done"
 
 # ----- Utilities -----
 run: all
-	qemu-system-i386 -cdrom $(BUILD)/os.iso
+	@qemu-system-i386 -cdrom $(BUILD)/os.iso
+	@echo "----> running $(BUILD)/os.iso done"
 
 disasm: $(BUILD)/kernel.elf
 	$(OBJDUMP) -D -Mintel -S $(BUILD)/kernel.elf | less
