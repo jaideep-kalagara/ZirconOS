@@ -20,10 +20,10 @@ GRUBDIR   := $(BOOTDIR)/grub
 
 # --- Includes & Flags ---
 INCLUDES  := -Iinclude -Iinclude/arch/$(ARCH) -Iinclude/kernel -Iinclude/libk
-CFLAGS    := -m32 -ffreestanding -fno-builtin -fno-stack-protector -fno-pic -fno-PIE -O2 -Wall -Wextra -Wno-unused-parameter $(INCLUDES)
+CFLAGS    := -m32 -ffreestanding -fno-builtin -fno-pic -fno-PIE -O2 -Wall -Wextra -Wno-unused-parameter $(INCLUDES)
 ASFLAGS   := --32
 LDSCRIPT  := link/$(ARCH).ld
-LDFLAGS   := -no-pie -Wl,--build-id=none,--trace-symbol=_start -T $(LDSCRIPT) -nostdlib
+LDFLAGS   := -no-pie -Wl,--build-id=none -T $(LDSCRIPT) -nostdlib
 NASMFLAGS := -f elf32
 
 # libgcc from the *current* compiler (cross)
@@ -115,6 +115,7 @@ run: all
 	-cdrom $(BUILD)/os.iso \
 	-no-reboot -no-shutdown \
 	-debugcon stdio \
+	-s -S \
 	-d int,cpu_reset,guest_errors -D qemu.log
 	@echo "----> running $(BUILD)/os.iso done"
 

@@ -37,6 +37,7 @@ void kernel_main(uint32_t magic, struct multiboot_info *boot_info) {
     printf("CPU: %s\n", brand);
   else
     printf("CPU brand string not supported.\n");
+
   terminal_set_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
 
   for (;;) {

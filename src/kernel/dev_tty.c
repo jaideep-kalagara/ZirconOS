@@ -4,6 +4,7 @@
 #include <kernel/tty.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 
 static long tty_write(void *priv, const void *buf, size_t n) {
   (void)priv;
