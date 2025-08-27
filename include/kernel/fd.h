@@ -10,8 +10,8 @@ typedef int (*fd_close_t)(void *priv);
 typedef struct file_ops {
   fd_read_t read;
   fd_write_t write;
-  fd_seek_t seek;   // optional; can be NULL
-  fd_close_t close; // optional
+  fd_seek_t seek;
+  fd_close_t close;
 } file_ops_t;
 
 typedef struct file {

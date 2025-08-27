@@ -17,6 +17,7 @@
         "cstdint": "cpp",
         "paging.h": "c",
         "random": "cpp",
-        "irq.h": "c"
+        "irq.h": "c",
+        "fd.h": "c"
     },
 }

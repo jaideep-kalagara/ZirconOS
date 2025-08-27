@@ -1,4 +1,5 @@
 #include "kernel/dev_tty.h"
+#include "arch/i686/io.h"
 #include "kernel/fd.h"
 #include <kernel/tty.h>
 #include <stddef.h>
@@ -46,7 +47,8 @@ int dev_tty_install_std(void) {
   int fd2 = fd1; // stderr -> same as stdout for now
 
   if (fd0 != 0 || fd1 != 1) {
-    // TODO: panic
+    printf("failed to install fds 0,1\n");
+    i686_panic();
     return -1;
   }
   (void)fd2;
