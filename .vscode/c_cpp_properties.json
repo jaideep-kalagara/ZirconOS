@@ -1,27 +1,20 @@
 {
     "configurations": [
         {
-            "name": "Linux",
-            "includePath": [
-                "${workspaceFolder}/**"
-            ],
-            "defines": [],
-            "compilerPath": "/usr/bin/clang-16",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "linux-clang-x64",
-            "configurationProvider": "ms-vscode.makefile-tools"
-        },
-        {
             "name": "ZirconOS",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "/home/jaideep/opt/cross/i686-elf/include"
             ],
-            "defines": [],
+            "defines": [
+                "__i386__",
+                "__ELF__",
+                "__STDC_HOSTED__=0"
+            ],
             "compilerPath": "/home/jaideep/opt/cross/bin/i686-elf-gcc",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "linux-gcc-x64"
+            "intelliSenseMode": "gcc-x86"
         }
     ],
     "version": 4

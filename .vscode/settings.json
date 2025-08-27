@@ -1,25 +1,10 @@
 {
+    "C_Cpp.default.compilerPath": "/home/jaideep/opt/cross/bin/i686-elf-gcc",
+    "C_Cpp.autoAddFileAssociations": true,
     "files.associations": {
         "*.css": "tailwindcss",
-        "stdio.h": "c",
-        "io.h": "c",
-        "stdbool.h": "c",
-        "stdint.h": "c",
-        "string.h": "c",
-        "vga.h": "c",
-        "tty.h": "c",
-        "stddef.h": "c",
-        "gdt.h": "c",
-        "i8259.h": "c",
-        "idt.h": "c",
-        "stdarg.h": "c",
-        "compare": "cpp",
-        "cstdint": "cpp",
-        "paging.h": "c",
-        "random": "cpp",
-        "irq.h": "c",
-        "fd.h": "c",
         "multiboot.h": "c",
-        "memory.h": "c"
-    },
+        "stdio.h": "c",
+        "vga.h": "c"
+    }
 }
