@@ -8,7 +8,7 @@
 
 enum { SCREEN_WIDTH = 80, SCREEN_HEIGHT = 25 };
 
-static volatile uint16_t *const screen_buffer = (uint16_t *)0xC00B8000;
+static volatile uint16_t *const screen_buffer = (uint16_t *)0x000B8000;
 static uint8_t terminal_color;
 static size_t screen_x = 0, screen_y = 0;
 

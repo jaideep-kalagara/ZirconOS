@@ -4,17 +4,14 @@
 #include <stdio.h>
 #include <string.h>
 
-void invalidate(uint32_t vaddr) { asm volatile("invlpg %0" ::"m"(vaddr)); }
-
 void i686_init_memory(uint32_t mem_high, uint32_t physical_alloc_start) {
-  initial_page_dir[0] = 0;
-  invalidate(0);
-  initial_page_dir[1023] = ((uint32_t)initial_page_dir - KERNEL_START) |
-                           PAGE_FLAG_PRESENT | PAGE_FLAG_WRITE;
+  pmm_init(physical_alloc_start, mem_high);
 
-  invalidate(0xFFFFF000);
-  pmm_init(physical_alloc_start, mem_high);      // setup pmm
-  memset(page_dirs, 0, 0x1000 * NUM_PAGES_DIRS); // set to zero
-  memset(page_dir_used, 0, NUM_PAGES_DIRS);      // set to zero
+  uint32_t pd_pa = ((uint32_t)initial_page_dir - KERNEL_START) & ~0xFFFu;
+
+  // place self-ref and activate PD/PT windows
+  ((volatile uint32_t *)initial_page_dir)[PD_SELF_INDEX] = pd_pa | PG_P | PG_RW;
+  wrcr3(pd_pa); // flush & enable PD/PT window at 0xFFFFF000 / 0xFFC00000
+
   printf("Memory initialized.\n");
 }

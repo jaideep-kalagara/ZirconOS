@@ -18,6 +18,8 @@
         "paging.h": "c",
         "random": "cpp",
         "irq.h": "c",
-        "fd.h": "c"
+        "fd.h": "c",
+        "multiboot.h": "c",
+        "memory.h": "c"
     },
 }

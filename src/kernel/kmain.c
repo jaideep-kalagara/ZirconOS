@@ -6,6 +6,7 @@
 #include <arch/i686/irq.h>
 #include <arch/i686/isr.h>
 #include <arch/i686/mm/memory.h>
+#include <arch/i686/mm/paging.h>
 #include <arch/i686/multiboot.h>
 
 #include <kernel/dev_tty.h>
@@ -32,6 +33,8 @@ void kernel_main(uint32_t magic, struct multiboot_info *boot_info) {
   uint32_t mod1 = *(uint32_t *)(boot_info->mods_addr + 4);
   uint32_t physical_alloc_start = (mod1 + 0xFFF) & ~0xFFF;
   i686_init_memory(boot_info->mem_upper * 1024, physical_alloc_start);
+
+  paging_map(0xC03FF000, 0x000B8000, PG_RW);
   char brand[64];
   if (cpu_get_brand_string(brand, sizeof brand))
     printf("CPU: %s\n", brand);
