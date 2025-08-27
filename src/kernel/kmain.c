@@ -5,6 +5,7 @@
 #include <arch/i686/irq.h>
 #include <arch/i686/isr.h>
 
+#include <kernel/sleep.h>
 #include <kernel/tty.h>
 #include <kernel/vga.h>
 #include <stdint.h>
@@ -20,6 +21,7 @@ void kernel_main(void) {
   i686_init_idt(); // lidt
   i686_init_isr(); // idt
   i686_init_irq(); // idt
+  init_sleep();
 
   char brand[64];
   if (cpu_get_brand_string(brand, sizeof brand))

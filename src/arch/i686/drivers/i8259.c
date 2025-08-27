@@ -35,6 +35,8 @@ enum {
 
 static uint16_t pic_mask = 0xffff;
 
+#define PIT_BASE 1193182u
+
 void i8259_set_mask(uint16_t new_mask) {
   pic_mask = new_mask;
   i686_outb(PIC1_DATA_PORT, pic_mask & 0xFF);
@@ -47,7 +49,18 @@ uint16_t i8259_get_mask() {
   return i686_inb(PIC1_DATA_PORT) | (i686_inb(PIC2_DATA_PORT) << 8);
 }
 
-void i8259_configure(uint8_t offset_pic1, uint8_t offset_pic2, bool auto_eoi) {
+void i8259_configure(uint8_t offset_pic1, uint8_t offset_pic2, bool auto_eoi,
+                     void *userdata) {
+
+  uint32_t speed = (uint32_t)userdata;
+
+  if (speed < 19)
+    speed = 19; // 1193182/65535 ≈ 18.2 Hz min
+  if (speed > PIT_BASE)
+    speed = PIT_BASE; // 1.193 MHz max
+
+  uint16_t div = (uint16_t)((PIT_BASE + speed / 2) / speed); // nearest integer
+
   // Mask everything
   i8259_set_mask(0xFFFF);
 
@@ -80,6 +93,10 @@ void i8259_configure(uint8_t offset_pic1, uint8_t offset_pic2, bool auto_eoi) {
   i686_iowait();
   i686_outb(PIC2_DATA_PORT, icw4);
   i686_iowait();
+
+  // (use 0x34 for mode 2; both are fine for periodic ticks)
+  i686_outb(0x40, div & 0xFF); // low byte
+  i686_outb(0x40, div >> 8);   // high byte
 
   // mask all interrupts until they are enabled by the device driver
   i8259_set_mask(0xFFFF);

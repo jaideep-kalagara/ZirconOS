@@ -46,11 +46,14 @@ void i686_init_irq() {
   }
 
   printf("Found %s driver.\n", driver->name);
-  driver->initialize(PIC_REMAP_OFFSET, PIC_REMAP_OFFSET + 8, false);
+  driver->initialize(PIC_REMAP_OFFSET, PIC_REMAP_OFFSET + 8, false,
+                     (void *)100);
 
   // register ISR handlers for each of the 16 irq lines
   for (int i = 0; i < 16; i++)
     i686_isr_register_handler(PIC_REMAP_OFFSET + i, i686_irq_handler);
+
+  driver->unmask(0);
 
   // enable interrupts
   i686_interrupts_enable();
