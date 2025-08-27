@@ -1,4 +1,4 @@
-#include <string.h>
+#include "libk/string.h"
 
 void memmove(void *dest, const void *src, size_t n) {
   for (size_t i = 0; i < n; i++)
@@ -21,11 +21,4 @@ int memcmp(const void *s1, const void *s2, size_t n) {
       return ((char *)s1)[i] - ((char *)s2)[i];
   }
   return 0;
-}
-
-size_t strlen(const char *s) {
-  size_t len = 0;
-  while (s[len])
-    len++;
-  return len;
 }

@@ -1,27 +1,50 @@
-
-; multiboot 2 header is handled in src/arch/i686/multiboot2_header.c
-
-; stack
 section .bss
 align 16
 stack_bottom:
-resb 16384 ; 16 KiB is reserved for stack
+	resb 16384 * 8
 stack_top:
 
-; The linker script specifies _start as the entry point to the kernel
-section .text
-global _start:function (_start.end - _start)
+section .boot
+global _start
 _start:
-    ; point to the top of the stack
-	mov esp, stack_top
+	mov ecx, (initial_page_dir - 0xC0000000)
+	mov cr3, ecx
+
+	mov ecx, cr4
+	or ecx, 0x10
+	mov cr4, ecx
+
+	mov ecx, cr0
+	or ecx, 0x80000000
+	mov cr0, ecx
+
+	jmp higher_half
 
 
-    ; kernel entry point
+section .text
+higher_half:
+	mov esp, stack_top ; set stack pointer
+	push ebx
+	push eax
+	xor ebp, ebp
+
 	extern kernel_main
 	call kernel_main
 
+halt:
+	hlt
+	jmp halt
 
-	cli
-.hang:	hlt
-	jmp .hang
-.end:
+
+section .data
+align 4096
+global initial_page_dir
+initial_page_dir:
+	dd 10000011b
+	times 768-1 dd 0
+
+	dd (0 << 22) | 10000011b
+	dd (1 << 22) | 10000011b
+	dd (2 << 22) | 10000011b
+	dd (3 << 22) | 10000011b
+	times 256-4 dd 0

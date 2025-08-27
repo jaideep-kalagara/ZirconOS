@@ -6,6 +6,7 @@ AR       := $(CROSS_PREFIX)ar
 RANLIB   := $(CROSS_PREFIX)ranlib
 OBJCOPY  := $(CROSS_PREFIX)objcopy
 OBJDUMP  := $(CROSS_PREFIX)objdump
+GAS      := $(CROSS_PREFIX)as
 NASM     := nasm
 
 # --- Paths ---
@@ -19,10 +20,10 @@ GRUBDIR   := $(BOOTDIR)/grub
 
 # --- Includes & Flags ---
 INCLUDES  := -Iinclude -Iinclude/arch/$(ARCH) -Iinclude/kernel -Iinclude/libk
-CFLAGS    := -m32 -ffreestanding -fno-builtin -fno-stack-protector -O2 -Wall -Wextra -Wno-unused-parameter $(INCLUDES)
+CFLAGS    := -m32 -ffreestanding -fno-builtin -fno-stack-protector -fno-pic -fno-PIE -O2 -Wall -Wextra -Wno-unused-parameter $(INCLUDES)
 ASFLAGS   := --32
 LDSCRIPT  := link/$(ARCH).ld
-LDFLAGS   := -T $(LDSCRIPT) -nostdlib
+LDFLAGS   := -no-pie -Wl,--build-id=none,--trace-symbol=_start -T $(LDSCRIPT) -nostdlib
 NASMFLAGS := -f elf32
 
 # libgcc from the *current* compiler (cross)
@@ -35,7 +36,7 @@ ifeq ($(LIBK_DIR),)
 endif
 
 # libk sources -> libk.a
-SRC_LIBK := $(shell find $(LIBK_DIR) -maxdepth 1 -name '*.c' 2>/dev/null)
+SRC_LIBK := $(shell find $(LIBK_DIR) -maxdepth 2 -name '*.c' 2>/dev/null)
 OBJ_LIBK := $(patsubst %.c,$(OBJDIR)/%.o,$(SRC_LIBK))
 LIBK_A   := $(LIBDIR)/libk.a
 
@@ -86,7 +87,7 @@ $(OBJDIR)/%.o: %.c
 # GAS (.S/.s) -> o
 $(OBJDIR)/%.o: %.S
 	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(GAS) $< -o $@
 	@echo "----> $@ done"
 
 $(OBJDIR)/%.o: %.s
@@ -110,7 +111,11 @@ iso: $(BUILD)/kernel.elf boot/grub/grub.cfg
 
 # ----- Utilities -----
 run: all
-	@qemu-system-i386 -cdrom $(BUILD)/os.iso -debugcon stdio
+	@qemu-system-i386 -m 256 \
+	-cdrom $(BUILD)/os.iso \
+	-no-reboot -no-shutdown \
+	-debugcon stdio \
+	-d int,cpu_reset,guest_errors -D qemu.log
 	@echo "----> running $(BUILD)/os.iso done"
 
 disasm: $(BUILD)/kernel.elf

@@ -54,6 +54,7 @@ void i686_init_irq() {
     i686_isr_register_handler(PIC_REMAP_OFFSET + i, i686_irq_handler);
 
   driver->unmask(0);
+  driver->unmask(1);
 
   // enable interrupts
   i686_interrupts_enable();

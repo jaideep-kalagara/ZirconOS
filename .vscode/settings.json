@@ -11,6 +11,12 @@
         "stddef.h": "c",
         "gdt.h": "c",
         "i8259.h": "c",
-        "idt.h": "c"
+        "idt.h": "c",
+        "stdarg.h": "c",
+        "compare": "cpp",
+        "cstdint": "cpp",
+        "paging.h": "c",
+        "random": "cpp",
+        "irq.h": "c"
     },
 }
