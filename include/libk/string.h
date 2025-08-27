@@ -12,3 +12,7 @@ int memcmp(const void *s1, const void *s2, size_t n);
 // string functions
 
 size_t strlen(const char *s);
+int strcmp(const char *s1, const char *s2);
+char *strcat(char *dest, const char *src);
+char *strtok(char *str, const char *delim);
+char *strchr(const char *str, int ch);

@@ -83,7 +83,6 @@ void terminal_set_color(enum vga_color fg, enum vga_color bg) {
 }
 
 void terminal_clear_screen(void) {
-    terminal_set_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
     enable_cursor(0, 15);
     uint16_t blank = vga_entry(' ', terminal_color);
     for (size_t i = 0; i < SCREEN_WIDTH * SCREEN_HEIGHT; ++i) {
@@ -113,6 +112,15 @@ void _putc(const char c) {
             }
             break;
         }
+        case '\b':
+            i686_outb(0xe9, '\b');
+            putchr(screen_x, screen_y, ' ');  // delete the character
+            if (screen_x > 0)                 // move the cursor
+                screen_x--;
+            else if (screen_y > 0)
+                screen_y--;
+            set_cursor(screen_x, screen_y);
+            break;
         default:
             if (screen_x >= SCREEN_WIDTH) {
                 screen_x = 0;

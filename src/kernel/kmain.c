@@ -17,13 +17,43 @@
 #include <unistd.h>
 
 void analyze_cmd(char *cmd) {
-    char *command = strtok(cmd, " ");
-    char *arg = strtok(NULL, " ");
+    if (!cmd) return;
+
+    // First token: command; second token: arg
+    char *command = strtok(cmd, " \t\r\n");
+    char *arg = strtok(NULL, " \t\r\n");
+
+    if (!command) return;
+
+    printf("\n");
     if (strcmp(command, "color") == 0) {
-        terminal_set_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
-        printf("\nTerminal color set to light green.\n");
-    } else
-        printf("Unknown command: %s\n", cmd);
+        if (!arg) {
+            printf("usage: color <light_green|red>\n");
+            return;
+        }
+
+        if (strcmp(arg, "light_green") == 0) {
+            terminal_set_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
+        } else if (strcmp(arg, "red") == 0) {
+            terminal_set_color(VGA_COLOR_RED, VGA_COLOR_BLACK);
+        } else if (strcmp(arg, "white") == 0) {
+            terminal_set_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+        } else {
+            printf("Unknown color: %s\n", arg);
+        }
+    } else if (strcmp(command, "clear") == 0) {
+        terminal_clear_screen();
+    } else if (strcmp(command, "sleep") == 0) {
+        sleep(10000);
+    } else if (strcmp(command, "help") == 0) {
+        printf("color <light_green|red|white>: set terminal color\n");
+        printf("clear: clear the screen\n");
+        printf("sleep: sleep for 10 seconds\n");
+        printf("help: what you are reading\n");
+    } else {
+        // Print the command token
+        printf("Unknown command: %s\n", command);
+    }
 }
 
 void kernel_main(uint32_t magic, struct multiboot_info *boot_info) {
@@ -50,7 +80,9 @@ void kernel_main(uint32_t magic, struct multiboot_info *boot_info) {
     else
         printf("CPU brand string not supported.\n");
 
-    terminal_set_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+    printf("\nWelcome to Zircon OS!\n");
+    printf("Type \"help\" for help.\n");
+    printf("------------------------------------\n");
 
     printf("> ");
     // shell EXTREMLY SIMPLE
@@ -61,7 +93,7 @@ void kernel_main(uint32_t magic, struct multiboot_info *boot_info) {
             if (buf[0] == '\n') {
                 analyze_cmd(command_buf);
                 memset(command_buf, 0, sizeof command_buf);
-                printf("\n>");
+                printf("\n> ");
                 continue;
             }
             if (buf[0] == '\b') {

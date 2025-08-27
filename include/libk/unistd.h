@@ -6,7 +6,7 @@
 #define STDOUT_FILENO 1
 #define STDERR_FILENO 2
 
-int open(const char *path, int flags); // minimal stub for now
+int open(const char *path, int flags);  // minimal stub for now
 int close(int fd);
 long read(int fd, void *buf, size_t n);
 long write(int fd, const void *buf, size_t n);

@@ -5,6 +5,10 @@
         "*.css": "tailwindcss",
         "multiboot.h": "c",
         "stdio.h": "c",
-        "vga.h": "c"
+        "vga.h": "c",
+        "keyboard.h": "c",
+        "stdint.h": "c",
+        "unistd.h": "c",
+        "string.h": "c"
     }
 }
