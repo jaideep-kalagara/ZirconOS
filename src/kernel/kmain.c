@@ -13,6 +13,18 @@
 #include <kernel/vga.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
+void analyze_cmd(char *cmd) {
+    char *command = strtok(cmd, " ");
+    char *arg = strtok(NULL, " ");
+    if (strcmp(command, "color") == 0) {
+        terminal_set_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
+        printf("\nTerminal color set to light green.\n");
+    } else
+        printf("Unknown command: %s\n", cmd);
+}
 
 void kernel_main(uint32_t magic, struct multiboot_info *boot_info) {
     dev_tty_install_std();
@@ -40,7 +52,27 @@ void kernel_main(uint32_t magic, struct multiboot_info *boot_info) {
 
     terminal_set_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
 
+    printf("> ");
+    // shell EXTREMLY SIMPLE
     for (;;) {
-        __asm__ volatile("hlt");
+        char buf[64];
+        char command_buf[64];
+        if (read(STDIN_FILENO, buf, sizeof buf) > 0) {
+            if (buf[0] == '\n') {
+                analyze_cmd(command_buf);
+                memset(command_buf, 0, sizeof command_buf);
+                printf("\n>");
+                continue;
+            }
+            if (buf[0] == '\b') {
+                if (strlen(command_buf) > 0) {
+                    command_buf[strlen(command_buf) - 1] = '\0';
+                    printf("\b \b");
+                }
+                continue;
+            }
+            strcat(command_buf, buf);
+            printf("%c", buf[0]);
+        }
     }
 }
