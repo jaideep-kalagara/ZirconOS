@@ -15,6 +15,9 @@
         "stddef.h": "c",
         "cstdint": "c",
         "ceil.h": "c",
-        "dev_tty.h": "c"
+        "dev_tty.h": "c",
+        "memory.h": "c",
+        "cpu_brand.h": "c",
+        "kinit.h": "c"
     }
 }
