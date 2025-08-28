@@ -116,6 +116,7 @@ run: all
 	-no-reboot -no-shutdown \
 	-debugcon stdio \
 	-s -S \
+	-m 512M \
 	-d int,cpu_reset,guest_errors -D qemu.log
 	@echo "----> running $(BUILD)/os.iso done"
 

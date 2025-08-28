@@ -9,6 +9,11 @@
         "keyboard.h": "c",
         "stdint.h": "c",
         "unistd.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "stdbool.h": "c",
+        "irq.h": "c",
+        "stddef.h": "c",
+        "cstdint": "c",
+        "ceil.h": "c"
     }
 }

@@ -63,4 +63,3 @@ struct multiboot_mmap_entry {
 #define MULTIBOOT_MEMORY_BADRAM 5
   uint32_t type;
 } __attribute__((packed));
-

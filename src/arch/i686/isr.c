@@ -47,7 +47,7 @@ void i686_init_isr() {
   for (int i = 0; i < 256; i++)
     i686_idt_enable_gate(i);
 
-  i686_idt_disable_gate(0x80); // NMI
+  i686_idt_disable_gate(0x80); // Interrupt 0x80
 }
 
 void isr_c_handler(registers *regs) {
