@@ -1,5 +1,3 @@
-// Multiboot2 header (ELF kernel) — request memory info (required) + framebuffer
-// (optional)
 #include <stdint.h>
 
 #define MB2_MAGIC 0xE85250D6u
