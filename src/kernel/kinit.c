@@ -61,7 +61,7 @@ void init(uint32_t magic, void *boot_info_phys, uint32_t *mem_high_bytes,
   i686_init_memory(/*mem_high*/ *mem_high_bytes,
                    /*physical_alloc_start*/ *physical_alloc_start);
 
-  kmalloc_init(16 * 1024);
+  kmalloc_init(16 * 1024); // 16 KiB
 
   // CPU brand
   char brand[64];
