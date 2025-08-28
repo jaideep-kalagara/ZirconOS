@@ -18,6 +18,9 @@
         "dev_tty.h": "c",
         "memory.h": "c",
         "cpu_brand.h": "c",
-        "kinit.h": "c"
+        "kinit.h": "c",
+        "isr.h": "c",
+        "shell.h": "c",
+        "pmm_stats.h": "c"
     }
 }

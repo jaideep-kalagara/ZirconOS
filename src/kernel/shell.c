@@ -3,6 +3,7 @@
 #include <arch/i686/cpu_brand.h> // cpu_get_brand_string (used by "info")
 #include <arch/i686/io.h>        // inb/outb
 #include <arch/i686/memory.h>    // dump_physical_memory_bitmap
+#include <arch/i686/pmm_stats.h> // pmm_get_stats
 #include <kernel/kmalloc.h>      // kmalloc/kfree
 #include <kernel/sleep.h>        // sleep
 #include <kernel/tty.h>          // terminal_*()
@@ -100,7 +101,7 @@ void analyze_cmd(char *cmd, uint32_t mem_high_bytes) {
     }
     uint16_t port = (uint16_t)port_ul;
     uint8_t val = i686_inb(port);
-    printf("inb(0x%04X) -> 0x%02X\n", port, val);
+    printf("inb(0x%X) -> 0x%X\n", port, val);
 
   } else if (strcmp(command, "outb") == 0) {
     char *arg2 = strtok(NULL, " \t\r\n");
@@ -121,17 +122,18 @@ void analyze_cmd(char *cmd, uint32_t mem_high_bytes) {
     uint16_t port = (uint16_t)port_ul;
     uint8_t val = (uint8_t)val_ul;
     i686_outb(port, val);
-    printf("outb(0x%04X, 0x%02X) -> OK\n", port, val);
+    printf("outb(0x%X, 0x%X) -> OK\n", port, val);
 
   } else if (strcmp(command, "info") == 0) {
+    pmm_stats_t stats = pmm_get_stats();
     printf("Kernel version: 0.0.1\n");
     char brand[64];
     if (cpu_get_brand_string(brand, sizeof brand))
       printf("CPU: %s\n", brand);
     else
       printf("CPU brand string not supported.\n");
-    printf("Memory: %u MiB\n", mem_high_bytes >> 20u);
-
+    printf("Memory: %u/%u MiB\n", stats.used_bytes_overall / (1024 * 1024),
+           stats.total_bytes_usable / (1024 * 1024));
   } else {
     printf("Unknown command: %s\n", command);
   }

@@ -8,13 +8,14 @@
 #include <arch/i686/isr.h>              // i686_init_isr
 #include <arch/i686/memory.h>           // KERNEL_START, i686_init_memory
 #include <arch/i686/multiboot.h> // MB2_BOOTLOADER_MAGIC, mb2_info_fixed, mb2_mem_top_bytes
-#include <kernel/dev_tty.h> // dev_tty_install_std
-#include <kernel/kmalloc.h> // kmalloc_init
-#include <kernel/sleep.h>   // init_sleep
-#include <kernel/tty.h>     // terminal_*()
-#include <kernel/vga.h>     // VGA_COLOR_*
-#include <stdint.h>         // uint32_t, uintptr_t
-#include <stdio.h>          // printf
+#include <arch/i686/pmm_stats.h> // pmm_get_stats
+#include <kernel/dev_tty.h>      // dev_tty_install_std
+#include <kernel/kmalloc.h>      // kmalloc_init
+#include <kernel/sleep.h>        // init_sleep
+#include <kernel/tty.h>          // terminal_*()
+#include <kernel/vga.h>          // VGA_COLOR_*
+#include <stdint.h>              // uint32_t, uintptr_t
+#include <stdio.h>               // printf
 
 #define PHYS_TO_VIRT(p) ((void *)((uintptr_t)(p) + KERNEL_START))
 #define ALIGN_UP(x, a) (((x) + ((a) - 1)) & ~((a) - 1))
@@ -50,7 +51,7 @@ void init(uint32_t magic, void *boot_info_phys, uint32_t *mem_high_bytes,
         (const struct mb2_info_fixed *)PHYS_TO_VIRT(boot_info_phys);
     *mem_high_bytes =
         mb2_mem_top_bytes(info); // prefer E820; fallback to basic mem
-    printf("MB2: mem_top = 0x%08X bytes\n", *mem_high_bytes); // <-- deref fix
+    printf("MB2: mem_top = 0x%X bytes\n", *mem_high_bytes);
   } else {
     printf("Unknown boot protocol (magic=0x%08X). Assuming 1 MiB only.\n",
            magic);

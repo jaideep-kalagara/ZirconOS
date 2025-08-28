@@ -1,4 +1,5 @@
 #include "arch/i686/memory.h"
+#include "arch/i686/pmm_stats.h"
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -10,8 +11,9 @@ static uint32_t page_frame_min;
 static uint32_t page_frame_max;
 static uint32_t total_alloc;
 
-#define NUM_PAGES_DIRS 256                         // TODO: Dynamically
-#define NUM_PAGE_FRAMES (0x100000000 / 0x1000 / 8) // 128 KiB
+#define PAGE_SIZE 0x1000
+#define NUM_PAGES_DIRS 256                            // TODO: Dynamically
+#define NUM_PAGE_FRAMES (0x100000000 / PAGE_SIZE / 8) // 128 KiB
 
 uint8_t physical_memory_bitmap[NUM_PAGE_FRAMES]; // TODO: Dynamically, bit array
 
@@ -22,8 +24,8 @@ static int mem_num_vpages;
 void invalidate(uint32_t vaddr) { asm volatile("invlpg %0" ::"m"(vaddr)); }
 
 void pmm_init(uint32_t mem_low, uint32_t mem_high) {
-  page_frame_min = CEIL_DIV(mem_low, 0x1000);
-  page_frame_max = mem_high / 0x1000;
+  page_frame_min = CEIL_DIV(mem_low, PAGE_SIZE);
+  page_frame_max = mem_high / PAGE_SIZE;
 
   // Start with all frames used
   memset(physical_memory_bitmap, 0xFF, sizeof physical_memory_bitmap);
@@ -131,8 +133,24 @@ void i686_init_memory(uint32_t mem_high, uint32_t physical_alloc_start) {
   invalidate(0xFFFFF000);
 
   pmm_init(physical_alloc_start, mem_high);
-  memset(page_dirs, 0, 0x1000 * NUM_PAGES_DIRS);
+  memset(page_dirs, 0, PAGE_SIZE * NUM_PAGES_DIRS);
   memset(page_dir_used, 0, NUM_PAGES_DIRS);
 
   printf("Memory initialized.\n");
+}
+
+pmm_stats_t pmm_get_stats(void) {
+  pmm_stats_t s = {0};
+  s.total_frames_usable = page_frame_max - page_frame_min;
+  s.used_frames_usable = total_alloc;
+  s.free_frames_usable = s.total_frames_usable - s.used_frames_usable;
+
+  s.total_bytes_usable = (uint32_t)s.total_frames_usable * PAGE_SIZE;
+  s.used_bytes_usable = (uint32_t)s.used_frames_usable * PAGE_SIZE;
+  s.free_bytes_usable = (uint32_t)s.free_frames_usable * PAGE_SIZE;
+
+  s.reserved_bytes_below_min = (uint32_t)page_frame_min * PAGE_SIZE;
+  s.total_bytes_physical = (uint32_t)page_frame_max * PAGE_SIZE;
+  s.used_bytes_overall = s.reserved_bytes_below_min + s.used_bytes_usable;
+  return s;
 }

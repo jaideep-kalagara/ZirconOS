@@ -111,7 +111,7 @@ iso: $(BUILD)/kernel.elf boot/grub/grub.cfg
 
 # ----- Utilities -----
 run: all
-	@qemu-system-i386 -m 256 \
+	@qemu-system-i386 \
 	-cdrom $(BUILD)/os.iso \
 	-no-reboot -no-shutdown \
 	-debugcon stdio \
