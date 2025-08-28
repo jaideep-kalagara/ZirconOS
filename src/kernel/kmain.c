@@ -21,9 +21,9 @@
 #define ALIGN_UP(x, a) (((x) + ((a) - 1)) & ~((a) - 1))
 
 // Forward decls
-static void analyze_cmd(char *cmd);
+static void analyze_cmd(char *cmd, uint32_t mem_high_byte);
 
-static void analyze_cmd(char *cmd) {
+static void analyze_cmd(char *cmd, uint32_t mem_high_bytes) {
   if (!cmd)
     return;
 
@@ -58,9 +58,41 @@ static void analyze_cmd(char *cmd) {
     printf("sleep: sleep for 10 seconds\n");
     printf("dbg_dump_pm: print physical memory bitmap\n");
     printf("kmalloc <size>: allocate <size> bytes of memory\n");
+    printf("kfree <ptr>: free memory at <ptr>\n");
+    printf("info: print info about the kernel and cpu\n");
     printf("help: what you are reading\n");
   } else if (strcmp(command, "kmalloc") == 0) {
-    // TODO: Implement kmalloc
+    if (!arg) {
+      printf("usage: kmalloc <size>\n");
+      return;
+    }
+    uint32_t n = (uint32_t)strtoul(arg, NULL, 0);
+    void *p = kmalloc(n);
+    if (!p)
+      printf("kmalloc(%u) -> NULL\n", n);
+    else
+      printf("kmalloc(%u) -> %p\n", n, p);
+  } else if (strcmp(command, "kfree") == 0) {
+    if (!arg) {
+      printf("usage: kfree <ptr>\n");
+      return;
+    }
+    void *p = (void *)strtoul(arg, NULL, 0);
+    if (!p) {
+      printf("kfree(NULL) -> error\n");
+    } else {
+      kfree(p);
+      printf("kfree(%p) -> OK\n", p);
+    }
+  } else if (strcmp(command, "info") == 0) {
+    printf("Kernel version: 0.0.1\n");
+    char brand[64];
+    if (cpu_get_brand_string(brand, sizeof brand))
+      printf("CPU: %s\n", brand);
+    else
+      printf("CPU brand string not supported.\n");
+
+    printf("Memory: %u MiB\n", mem_high_bytes >> 20u);
   } else {
     printf("Unknown command: %s\n", command);
   }
@@ -128,7 +160,7 @@ void kernel_main(uint32_t magic, void *boot_info_phys) {
     char ch;
     if (read(STDIN_FILENO, &ch, 1) > 0) {
       if (ch == '\n') {
-        analyze_cmd(input_buf);
+        analyze_cmd(input_buf, mem_high_bytes);
         memset(input_buf, 0, sizeof input_buf);
         printf("\n> ");
       } else if (ch == '\b') {
