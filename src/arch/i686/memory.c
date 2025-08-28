@@ -22,7 +22,7 @@ static int mem_num_vpages;
 void invalidate(uint32_t vaddr) { asm volatile("invlpg %0" ::"m"(vaddr)); }
 
 void pmm_init(uint32_t mem_low, uint32_t mem_high) {
-  page_frame_min = CEIL_DIV(mem_low, 4096);
+  page_frame_min = CEIL_DIV(mem_low, 0x1000);
   page_frame_max = mem_high / 0x1000;
 
   // Start with all frames used
@@ -37,12 +37,9 @@ void pmm_init(uint32_t mem_low, uint32_t mem_high) {
 }
 
 uint32_t pmm_alloc_page_frame(void) {
-  printf("page_frame_min: %d\n", page_frame_min);
-  printf("page_frame_max: %d\n", page_frame_max);
   for (uint32_t f = page_frame_min; f < page_frame_max; ++f) {
     uint32_t byte = f >> 3;
     uint8_t mask = (uint8_t)(1u << (f & 7u));
-    printf("%d %d\n", byte, mask);
     if ((physical_memory_bitmap[byte] & mask) == 0) { // free
       physical_memory_bitmap[byte] |= mask;           // mark used
       total_alloc++;

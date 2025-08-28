@@ -17,14 +17,18 @@
 #include <string.h>
 #include <unistd.h>
 
-void analyze_cmd(char *cmd) {
+#define PHYS_TO_VIRT(p) ((void *)((uintptr_t)(p) + KERNEL_START))
+#define ALIGN_UP(x, a) (((x) + ((a) - 1)) & ~((a) - 1))
+
+// Forward decls
+static void analyze_cmd(char *cmd);
+
+static void analyze_cmd(char *cmd) {
   if (!cmd)
     return;
 
-  // First token: command; second token: arg
   char *command = strtok(cmd, " \t\r\n");
   char *arg = strtok(NULL, " \t\r\n");
-
   if (!command)
     return;
 
@@ -34,20 +38,20 @@ void analyze_cmd(char *cmd) {
       printf("usage: color <light_green|red|white>\n");
       return;
     }
-
-    if (strcmp(arg, "light_green") == 0) {
+    if (strcmp(arg, "light_green") == 0)
       terminal_set_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
-    } else if (strcmp(arg, "red") == 0) {
+    else if (strcmp(arg, "red") == 0)
       terminal_set_color(VGA_COLOR_RED, VGA_COLOR_BLACK);
-    } else if (strcmp(arg, "white") == 0) {
+    else if (strcmp(arg, "white") == 0)
       terminal_set_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
-    } else {
+    else
       printf("Unknown color: %s\n", arg);
-    }
   } else if (strcmp(command, "clear") == 0) {
     terminal_clear_screen();
   } else if (strcmp(command, "sleep") == 0) {
     sleep(10000);
+  } else if (strcmp(command, "dbg_dump_pm") == 0) {
+    dump_physical_memory_bitmap();
   } else if (strcmp(command, "help") == 0) {
     printf("color <light_green|red|white>: set terminal color\n");
     printf("clear: clear the screen\n");
@@ -56,42 +60,57 @@ void analyze_cmd(char *cmd) {
     printf("kmalloc <size>: allocate <size> bytes of memory\n");
     printf("help: what you are reading\n");
   } else if (strcmp(command, "kmalloc") == 0) {
-    if (!arg) {
-      printf("usage: kmalloc <size>\n");
-      return;
-    }
-    // TODO: implement kmalloc
-  } else if (strcmp(command, "dbg_dump_pm") == 0) {
-    dump_physical_memory_bitmap();
+    // TODO: Implement kmalloc
   } else {
-    // Print the command token
     printf("Unknown command: %s\n", command);
   }
 }
 
-void kernel_main(uint32_t magic, struct multiboot_info *boot_info) {
+void kernel_main(uint32_t magic, void *boot_info_phys) {
   dev_tty_install_std();
-  terminal_clear_screen(); // init screen
-
+  terminal_clear_screen();
   terminal_set_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
   printf("----- Zircon OS v0.0.1 (Kernel) -----\n");
 
-  i686_init_gdt(); // lgdt + reload segments (no sti)
-  i686_init_idt(); // lidt
-  i686_init_isr(); // idt
-  i686_init_irq(); // idt
+  // Early CPU/IDT/IRQ init
+  i686_init_gdt();
+  i686_init_idt();
+  i686_init_isr();
+  i686_init_irq();
   keyboard_init();
   init_sleep();
+  printf("Early CPU/IDT/IRQ init done.\n");
 
-  uint32_t mod1 = *(uint32_t *)(boot_info->mods_addr + 4);
-  uint32_t physical_alloc_start = (mod1 + 0xFFF) & ~0xFFF;
-  printf("boot_info->mem_upper * 1024: %d\n", boot_info->mem_upper * 1024);
-  i686_init_memory(boot_info->mem_upper * 1024, physical_alloc_start);
+  // --- Work out top-of-RAM (bytes) and first free physical byte ---
+  uint32_t mem_high_bytes = 0x00100000u; // safe default = 1 MiB
+  uint32_t physical_alloc_start;
+
+  // End of kernel (VIRTUAL) from linker script; convert to PHYSICAL then
+  // page-align up
+  extern char _kernel_end; // provided by your linker
+  uint32_t kernel_phys_end = (uint32_t)((uintptr_t)&_kernel_end - KERNEL_START);
+  physical_alloc_start = (uint32_t)ALIGN_UP(kernel_phys_end, 0x1000u);
+
+  if (magic == MB2_BOOTLOADER_MAGIC) {
+    // Multiboot2: EBX (= boot_info_phys) points to tag list at a PHYSICAL
+    // address
+    const struct mb2_info_fixed *info =
+        (const struct mb2_info_fixed *)PHYS_TO_VIRT(boot_info_phys);
+    mem_high_bytes =
+        mb2_mem_top_bytes(info); // prefer E820; fallback to basic mem
+    printf("MB2: mem_top = 0x%08x bytes\n", mem_high_bytes);
+  } else {
+    printf("Unknown boot protocol (magic=0x%08x). Assuming 1 MiB only.\n",
+           magic);
+  }
+
+  // --- Bring up paging/PMM/KHEAP ---
+  i686_init_memory(/*mem_high*/ mem_high_bytes,
+                   /*physical_alloc_start*/ physical_alloc_start);
+
   kmalloc_init(16 * 1024);
 
-  uint32_t pf = pmm_alloc_page_frame();
-  printf("PF alloc: 0x%X\n", pf);
-
+  // CPU brand
   char brand[64];
   if (cpu_get_brand_string(brand, sizeof brand))
     printf("CPU: %s\n", brand);
@@ -102,35 +121,30 @@ void kernel_main(uint32_t magic, struct multiboot_info *boot_info) {
   printf("Type \"help\" for help.\n");
   printf("------------------------------------\n");
 
-  // kmalloc test
-  void *a = kmalloc(1000);
-  void *b = kmalloc(2000);
-  kfree(a);
-  void *c = kmalloc(800); // should reuse 'a' block (>=800)
-  (void)b;
-  (void)c;
-
+  // Mini shell
   printf("> ");
-  // shell EXTREMLY SIMPLE
+  char input_buf[64] = {0};
   for (;;) {
-    char buf[64];
-    char input_buf[64];
-    if (read(STDIN_FILENO, buf, sizeof buf) > 0) {
-      if (buf[0] == '\n') {
+    char ch;
+    if (read(STDIN_FILENO, &ch, 1) > 0) {
+      if (ch == '\n') {
         analyze_cmd(input_buf);
         memset(input_buf, 0, sizeof input_buf);
         printf("\n> ");
-        continue;
-      }
-      if (buf[0] == '\b') {
-        if (strlen(input_buf) > 0) {
-          input_buf[strlen(input_buf) - 1] = '\0';
+      } else if (ch == '\b') {
+        size_t L = strlen(input_buf);
+        if (L) {
+          input_buf[L - 1] = '\0';
           printf("\b \b");
         }
-        continue;
+      } else {
+        size_t L = strlen(input_buf);
+        if (L + 1 < sizeof input_buf) {
+          input_buf[L] = ch;
+          input_buf[L + 1] = '\0';
+        }
+        printf("%c", ch);
       }
-      strcat(input_buf, buf); // add the character on the buffer
-      printf("%c", buf[0]);
     }
   }
 }

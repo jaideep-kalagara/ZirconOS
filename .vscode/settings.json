@@ -14,6 +14,7 @@
         "irq.h": "c",
         "stddef.h": "c",
         "cstdint": "c",
-        "ceil.h": "c"
+        "ceil.h": "c",
+        "dev_tty.h": "c"
     }
 }
