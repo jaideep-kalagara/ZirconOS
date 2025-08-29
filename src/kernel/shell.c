@@ -1,18 +1,27 @@
 #include "kernel/shell.h"
 
-#include <arch/i686/cpu_brand.h> // cpu_get_brand_string (used by "info")
-#include <arch/i686/io.h>        // inb/outb
-#include <arch/i686/memory.h>    // dump_physical_memory_bitmap
-#include <arch/i686/pmm_stats.h> // pmm_get_stats
-#include <kernel/kmalloc.h>      // kmalloc/kfree
-#include <kernel/sleep.h>        // sleep
-#include <kernel/tty.h>          // terminal_*()
-#include <kernel/vga.h>          // VGA_COLOR_*
-#include <stdint.h>              // uint32_t
-#include <stdio.h>               // printf
-#include <stdlib.h>              // strtoul
-#include <string.h>              // strtok, strcmp, memset, strlen
-#include <unistd.h>              // read
+#include <arch/i686/cpu_brand.h>   // cpu_get_brand_string (used by "info")
+#include <arch/i686/drivers/ide.h> // ide_devices, ide_read_sectors
+#include <arch/i686/io.h>          // inb/outb
+#include <arch/i686/memory.h>      // dump_physical_memory_bitmap
+#include <arch/i686/pmm_stats.h>   // pmm_get_stats
+#include <kernel/kmalloc.h>        // kmalloc/kfree
+#include <kernel/sleep.h>          // sleep
+#include <kernel/tty.h>            // terminal_*()
+#include <kernel/vga.h>            // VGA_COLOR_*
+#include <stdint.h>                // uint32_t
+#include <stdio.h>                 // printf
+#include <stdlib.h>                // strtoul
+#include <string.h>                // strtok, strcmp, memset, strlen
+#include <unistd.h>                // read
+#include <util/hex.h>              // hexdump
+
+#ifndef KERNEL_DATA_SEL
+#define KERNEL_DATA_SEL 0x10 // typical GDT data selector
+#endif
+
+// from IDE driver (used to retrieve last error)
+extern unsigned char package[2];
 
 void analyze_cmd(char *cmd, uint32_t mem_high_bytes) {
   if (!cmd)
@@ -59,6 +68,7 @@ void analyze_cmd(char *cmd, uint32_t mem_high_bytes) {
            "ok)\n");
     printf("outb <port> <value>            : write byte to I/O port\n");
     printf("info                           : print kernel/CPU/memory info\n");
+    printf("dsk <cmd> <arg>                : disk commands (see dsk help)\n");
     printf("help                           : this text\n");
 
   } else if (strcmp(command, "kmalloc") == 0) {
@@ -131,6 +141,103 @@ void analyze_cmd(char *cmd, uint32_t mem_high_bytes) {
       printf("CPU brand string not supported.\n");
     printf("Memory: %u/%u MiB\n", stats.used_bytes_overall / (1024 * 1024),
            stats.total_bytes_usable / (1024 * 1024));
+
+  } else if (strcmp(command, "dsk") == 0) {
+    if (!arg) {
+      printf("usage: dsk <cmd> <arg>\n");
+      return;
+    }
+    char *arg2 = strtok(NULL, " \t\r\n");
+
+    if (strcmp(arg, "help") == 0) {
+      printf("dsk list                         : list disk(s)\n");
+      printf("dsk read <drive> <lba> <sectors> : read and hexdump sectors\n");
+
+    } else if (strcmp(arg, "list") == 0) {
+      for (int i = 0; i < 4; i++) {
+        if (ide_devices[i].reserved) {
+          // KiB = sectors * 512 / 1024 = sectors / 2
+          printf("Drive %d: Type: %s Size: %u KiB - %s\n", i,
+                 (const char *[]){"ATA", "ATAPI"}[ide_devices[i].type],
+                 ide_devices[i].size / 2, ide_devices[i].model);
+        }
+      }
+
+    } else if (strcmp(arg, "read") == 0) {
+      // dsk read <drive> <lba> <sectors>
+      char *drive_str = arg2;
+      char *lba_str = strtok(NULL, " \t\r\n");
+      char *sec_str = strtok(NULL, " \t\r\n");
+      if (!drive_str || !lba_str || !sec_str) {
+        printf("usage: dsk read <drive> <lba> <sectors>\n");
+        return;
+      }
+
+      unsigned long drive_ul = strtoul(drive_str, NULL, 0);
+      unsigned long lba_ul = strtoul(lba_str, NULL, 0);
+      unsigned long nsec_ul = strtoul(sec_str, NULL, 0);
+
+      if (drive_ul > 3) {
+        printf("read: drive must be 0..3\n");
+        return;
+      }
+      if (!ide_devices[drive_ul].reserved) {
+        printf("read: drive %lu not present\n", drive_ul);
+        return;
+      }
+      if (ide_devices[drive_ul].type != 0) {
+        printf("read: drive %lu is ATAPI (not ATA PIO here)\n", drive_ul);
+        return;
+      }
+      if (nsec_ul == 0) {
+        printf("read: sectors must be >= 1\n");
+        return;
+      }
+      if (lba_ul + nsec_ul > ide_devices[drive_ul].size) {
+        printf("read: range exceeds drive size (max LBA %u)\n",
+               ide_devices[drive_ul].size - 1);
+        return;
+      }
+
+      // cap sectors for output sanity
+      const unsigned long max_secs_to_read = 32;
+      if (nsec_ul > max_secs_to_read) {
+        printf("note: capping sectors to %lu for output\n", max_secs_to_read);
+        nsec_ul = max_secs_to_read;
+      }
+
+      size_t bytes = (size_t)nsec_ul * 512u;
+      void *buf = kmalloc((uint32_t)bytes);
+      if (!buf) {
+        printf("read: OOM\n");
+        return;
+      }
+
+      package[0] = 0; // clear previous error
+      ide_read_sectors((unsigned char)drive_ul, (unsigned char)nsec_ul,
+                       (unsigned int)lba_ul, KERNEL_DATA_SEL,
+                       (unsigned int)buf);
+
+      if (package[0] != 0) {
+        printf("read: IDE error %u\n", package[0]);
+        kfree(buf);
+        return;
+      }
+
+      size_t show = bytes;
+      if (show > 4096) {
+        printf("showing first 4096 bytes only\n");
+        show = 4096;
+      }
+      // If your hexdump has (data,len,base): use lba*512 as base; otherwise
+      // ignore it.
+      hexdump(buf, show, (uint32_t)(lba_ul * 512u));
+
+      kfree(buf);
+    } else {
+      printf("dsk: unknown subcommand: %s\n", arg);
+    }
+
   } else {
     printf("Unknown command: %s\n", command);
   }

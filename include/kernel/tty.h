@@ -13,28 +13,37 @@ void enable_cursor(uint8_t start, uint8_t end);
 /* Disable cursor */
 void disable_cursor(void);
 
-/* Draw single cell */
+/* ----- Cell I/O (text mode) ----- */
+
+/* Draw single character cell (uses current color) */
 void putchr(size_t x, size_t y, char c);
-/* Read single cell */
+/* Read character from a cell */
 char getchr(size_t x, size_t y);
-/* Draw single 16-bit cell */
+/* Draw raw 16-bit VGA cell (char | attribute) */
 void putcell(size_t x, size_t y, uint16_t cell);
-/* Read single 16-bit cell */
+/* Read raw 16-bit VGA cell */
 uint16_t getcell(size_t x, size_t y);
 
-/* Scroll back 'lines' lines */
-void scrollback(int lines);
-
-/* ----- Terminal ----- */
+/* ----- Terminal state ----- */
 
 /* Set terminal color */
 void terminal_set_color(enum vga_color fg, enum vga_color bg);
-/* Clear terminal screen */
+/* Clear terminal screen and reset scrollback view to bottom */
 void terminal_clear_screen(void);
 
-/* ----- Public API ----- */
+/* ----- Output ----- */
 
-/* Print character */
+/* Print single character */
 void _putc(const char c);
-/* Print string */
+/* Print null-terminated string */
 void _puts(const char *s);
+
+/* ----- Scrollback controls (user navigation) ----- */
+/* Scroll by N lines: +N = up, -N = down */
+void terminal_scroll_lines(int delta);
+/* Page up/down by one screen */
+void terminal_scroll_page_up(void);
+void terminal_scroll_page_down(void);
+/* Jump to oldest (top) / newest (bottom) content */
+void terminal_scroll_home(void);
+void terminal_scroll_end(void);

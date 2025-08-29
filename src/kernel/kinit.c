@@ -1,6 +1,7 @@
 #include "kernel/kinit.h"
 
 #include <arch/i686/cpu_brand.h>        // cpu_get_brand_string
+#include <arch/i686/drivers/ide.h>      // ide_init
 #include <arch/i686/drivers/keyboard.h> // keyboard_init
 #include <arch/i686/gdt.h>              // i686_init_gdt
 #include <arch/i686/idt.h>              // i686_init_idt
@@ -63,13 +64,28 @@ void init(uint32_t magic, void *boot_info_phys, uint32_t *mem_high_bytes,
 
   kmalloc_init(16 * 1024); // 16 KiB
 
+  ide_init(0x1F0, 0x3F6, 0x170, 0x376, 0x000); // IDE
+
+  // read mbr on first disk
+
+#define KDATA_SEL 0x10 // your kernel data selector
+  static uint8_t mbr[512] __attribute__((aligned(2)));
+
+  ide_read_sectors(/*drive*/ 0, /*numsects*/ 1, /*lba*/ 0,
+                   /*es*/ KDATA_SEL, /*edi*/ (uint32_t)mbr);
+
+  if (package[0] != 0) {
+    printf("IDE read error: %u\n", package[0]);
+  } else {
+    printf("MBR sig: 0x%X%X\n", mbr[511], mbr[510]); // expect 55 AA
+  }
+
   // CPU brand
   char brand[64];
   if (cpu_get_brand_string(brand, sizeof brand))
     printf("CPU: %s\n", brand);
   else
     printf("CPU brand string not supported.\n");
-  fprintf(STDERR_FILENO, "err\n");
   printf("\nWelcome to Zircon OS!\n");
   printf("Type \"help\" for help.\n");
   printf("------------------------------------\n");

@@ -22,6 +22,8 @@
         "isr.h": "c",
         "shell.h": "c",
         "pmm_stats.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "ranges": "c",
+        "ide.h": "c"
     }
 }

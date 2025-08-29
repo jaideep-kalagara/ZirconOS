@@ -103,6 +103,8 @@ $(OBJDIR)/%.o: %.asm
 
 # ----- ISO -----
 iso: $(BUILD)/kernel.elf boot/grub/grub.cfg
+# for os testing of file system
+	@mkdir -p fsdir
 	@mkdir -p $(GRUBDIR)
 	@cp -v boot/grub/grub.cfg $(GRUBDIR)/
 	@cp -v $(BUILD)/kernel.elf $(BOOTDIR)/

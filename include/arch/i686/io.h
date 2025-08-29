@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stddef.h>
 #include <stdint.h>
 
 static inline void i686_outb(uint16_t port, uint8_t value) {
@@ -26,6 +27,14 @@ static inline void i686_panic(void) {
   for (;;) {
     __asm__ volatile("hlt");
   }
+}
+
+static inline void i686_insl(uint16_t port, void *dst, unsigned int dwords) {
+  // Ensure DF=0; load EDI with dst, ECX with count, DX with port
+  asm volatile("cld; rep insl"
+               : "+D"(dst), "+c"(dwords)
+               : "d"(port)
+               : "memory");
 }
 
 static inline void i686_iowait(void) { i686_outb(0x80, 0); }

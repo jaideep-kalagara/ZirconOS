@@ -13,7 +13,8 @@
       "type": "shell",
       "command": "bash",
       "args": ["-lc",
-        "qemu-system-i386 -cdrom build/i686/os.iso -s -S -m 512M -daemonize -d guest_errors -D qemu.log"
+        "qemu-system-i386 -cdrom build/i686/os.iso -s -S -m 512M -daemonize -d guest_errors -D qemu.log -drive file=fat:rw:fsdir,format=raw,if=ide -boot order=d,menu=on,strict=on"
+        
       ],
       "options": { "cwd": "${workspaceFolder}" },
       "isBackground": true
