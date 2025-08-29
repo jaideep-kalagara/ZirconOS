@@ -69,7 +69,7 @@ void init(uint32_t magic, void *boot_info_phys, uint32_t *mem_high_bytes,
     printf("CPU: %s\n", brand);
   else
     printf("CPU brand string not supported.\n");
-
+  fprintf(STDERR_FILENO, "err\n");
   printf("\nWelcome to Zircon OS!\n");
   printf("Type \"help\" for help.\n");
   printf("------------------------------------\n");

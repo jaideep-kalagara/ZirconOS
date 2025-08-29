@@ -10,12 +10,9 @@
 #include <kernel/vga.h>          // VGA_COLOR_*
 #include <stdint.h>              // uint32_t
 #include <stdio.h>               // printf
+#include <stdlib.h>              // strtoul
 #include <string.h>              // strtok, strcmp, memset, strlen
 #include <unistd.h>              // read
-
-// If you don't have <stdlib.h>, keep this forward decl for your freestanding
-// strtoul:
-unsigned long strtoul(const char *nptr, char **endptr, int base);
 
 void analyze_cmd(char *cmd, uint32_t mem_high_bytes) {
   if (!cmd)

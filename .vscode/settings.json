@@ -21,6 +21,7 @@
         "kinit.h": "c",
         "isr.h": "c",
         "shell.h": "c",
-        "pmm_stats.h": "c"
+        "pmm_stats.h": "c",
+        "stdlib.h": "c"
     }
 }

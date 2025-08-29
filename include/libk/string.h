@@ -15,5 +15,4 @@ size_t strlen(const char *s);
 int strcmp(const char *s1, const char *s2);
 char *strcat(char *dest, const char *src);
 char *strtok(char *str, const char *delim);
-unsigned long strtoul(const char *nptr, char **endptr, int base);
 char *strchr(const char *str, int ch);
