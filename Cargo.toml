@@ -1,6 +1,28 @@
+[workspace]
+members = ["kernel"]
+
+
 [package]
-name = "ZirconOS"
+name = "zircon_os"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+
+
+# in Cargo.toml
+[build-dependencies]
+bootloader = "0.11.11"
+kernel = { path = "kernel", artifact = "bin", target = "x86_64-unknown-none" }
+
+[[bin]]
+name = "zircon_os"
+test = false
+bench = false
 
 [dependencies]
+ovmf-prebuilt = "0.1.0-alpha.1"
+
+
+[profile.dev]
+panic = "abort"
+[profile.release]
+panic = "abort"
